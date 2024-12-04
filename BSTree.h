@@ -26,7 +26,7 @@ private:
 
 	// Insercion de elementos
 	BSNode<T>* insert(BSNode<T>* n, T e) {
-		T newNode = new BSNode<T>*(e);
+		BSNode<T>* newNode = new BSNode<T>(e); // newNode tenia que ser un puntero de tipo BSNode<T>
 		if(n == nullptr){
 			return newNode;
 		}else if(n->elem == e) {
@@ -97,19 +97,16 @@ private:
 public:
         // miembros públicos
 	// Búsqueda de elementos
-	BSTree(); // Crea un ABB vacio
+	BSTree() : nelem(0), root(nullptr){} // Crea un ABB vacio
 	int size() const {
 	    return nelem;
 	}
 	T search(T e) const {
-		return search(root, e); // Fijarse si aqui hay un error !!!!!
+		BSNode<T>* result = search(root, e); // Fijarse si aqui hay un error !!!!!
+		return result->elem;
 	}
 	T operator[] (T e) const {
-		BSNode<T>* result = search(root, e);
-		if(result == nullptr){
-			throw std::runtime_error("No se ha encontrado el elemento");
-		}
-		return result->elem;
+		return search(e);
 	}
 	
 	// Insercion de elementos
