@@ -15,6 +15,7 @@ private:
 	BSNode<T>* search(BSNode<T>*n, T e) const {
 		if(n == nullptr){
 			throw std::runtime_error("No se ha encontrado el elemento");
+			return nullptr;
 		} else if (n->elem < e){
 			return search(n->right, e);
 		} else if (n->elem > e){
@@ -98,11 +99,12 @@ public:
         // miembros públicos
 	// Búsqueda de elementos
 	BSTree() : nelem(0), root(nullptr){} // Crea un ABB vacio
+	
 	int size() const {
 	    return nelem;
 	}
 	T search(T e) const {
-		BSNode<T>* result = search(root, e); // Fijarse si aqui hay un error !!!!!
+		BSNode<T>* result = search(root, e);
 		return result->elem;
 	}
 	T operator[] (T e) const {

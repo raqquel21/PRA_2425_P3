@@ -17,7 +17,7 @@ class BSTreeDict: public Dict<V> {
     BSTreeDict(){
         tree = new BSTree<TableEntry<V>>();
     }
-    ~BSTreeDict() {delete tree;} // O delete[] ?
+    ~BSTreeDict() {delete tree;}
     
     friend std::ostream& operator<<(std::ostream &out, const BSTreeDict<V> &bs){
         out << "BSTree: " << *bs.tree << std::endl;
@@ -33,32 +33,23 @@ class BSTreeDict: public Dict<V> {
     }
 
     void insert(std::string key, V value) override{
-        TableEntry<V> entry(key, value);
-        //if(tree->search(entry)){
-        //throw std::runtime_error("La llave ya existe");
-        //}
-        tree->insert(entry);
+        TableEntry<V> entrada(key, value);
+        tree->insert(entrada);
     }
 
     V search(std::string key) override{
-        TableEntry<V> query(key);
-        TableEntry<V> result = tree->search(query);
-        /*if (!result) {*/
-        /*    throw std::runtime_error("Key not found in the dictionary");*/
-        /*}*/
-        V value = result.value;
-        return value;
+        TableEntry<V> consulta(key);
+        TableEntry<V> res = tree->search(consulta);
+        V valor = res.value;
+        return valor;
     }
 
     V remove(std::string key) override{
-        TableEntry<V> query(key);
-        TableEntry<V> result = tree->search(query);
-        /*if (!result) {*/
-        /*    throw std::runtime_error("Key not found in the dictionary");*/
-        /*}*/
-        V value = result.value;
-        tree->remove(query);
-        return value;
+        TableEntry<V> consulta(key);
+        TableEntry<V> res = tree->search(consulta);
+        V valor = res.value;
+        tree->remove(consulta);
+        return valor;
     }
 };
 

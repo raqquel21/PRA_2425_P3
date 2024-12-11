@@ -24,9 +24,11 @@ class HashTable: public Dict <V> {
 		}
 		return valor_ascii % max;
 	}
+
 	public:
 	// Métodos de la tabla Hash
 	HashTable(int size) {
+		if(size <= 0) throw std::invalid_argument("Tamaño inválido");
 		table = new ListLinked<TableEntry<V>>[size];
 		max = size;
 		n = 0;
@@ -38,7 +40,9 @@ class HashTable: public Dict <V> {
 		return max;
 	}
 	friend std::ostream& operator << (std::ostream &out, const HashTable<V> &th) {
-		out << "Tabla Hash: " << th.table << std::endl;
+		for(int i = 0; i < th.max; i++){
+			out << i << ": " << th.table[i] << std::endl;
+		}
 		return out;
 	}
 	V operator[](std::string key) {
@@ -50,67 +54,53 @@ class HashTable: public Dict <V> {
 		}
 		throw std::runtime_error("Error al encontrar key");
 	}
-	void insert (std::string key, V value){
-		int tmp = h(key); 	
-		if(search(key) != -1) { 
+
+	void insert(std::string key, V value) override{
+		int tmp = h(key);
+		// Verificar si la clave ya existe
+		for (int i = 0; i < table[tmp].size(); i++) {
+			if (table[tmp][i].key == key) {
 			throw std::runtime_error("La llave ya existe");
+			}
 		}
-		if(n == max){
-			throw std::runtime_error("Tabla llena");
-		}
-		TableEntry<V> entrada(key,value); // Crea una nueva entrada con key y value
-		table[tmp].insert(0, entrada); //Inserta la entrada en la posición correspondiente
+		TableEntry<V> entrada(key, value); // Crea una nueva entrada con key y value
+		table[tmp].insert(0, entrada); // Inserta la entrada en la posición correspondiente
 		n++; // Incrementa el contador de elementos
-
 	}
-
-	V search (std::string key) {
+	V search (std::string key) override{
 		int pos = h(key);
-		int indice = table[pos].search(key);
-		if (indice == -1){
-			throw std::runtime_error("Error al enncontrar key");
+		
+		if (table[pos].empty()) {
+			throw std::runtime_error("No se ha encontrado key");
 		}
-		return table[pos][indice].value; 	
+		for(int i = 0; i < table[pos].size(); i++){
+			if(table[pos][i].key == key){
+				return table[pos][i].value;
+			}
+		}
+		throw std::runtime_error("No se ha encontrado key");
 	}
 
-	V remove (std::string key) {
+	V remove (std::string key) override{
 		int pos = h(key);
-		int indice = table[pos].search(key);
-		if(indice == -1){
-			throw std::runtime_error("Error al enncontrar key");
+
+		if (table[pos].empty()){
+			throw std::runtime_error("No se ha encontrado key");
 		}
-		V value = table[pos][indice].value;
-		table[pos].remove(indice);
-		n--;
-		return value;
+		for(int i = 0; i < table[pos].size(); i++){
+			if(table[pos][i].key == key){
+				V valor = table[pos][i].value; 
+				table[pos].remove(i);
+				n--;
+				return valor;
+			}
+		}
+		throw std::runtime_error("No se ha encontrado key");
+
 	}
-	int entries (){
+	int entries () override{
 		return n;
 	}
 };
 
 #endif
-/*
-void insert(const std::string key, const V val) {
-    int temp = h(key); // Calcula el índice hash
-    int indice = search(key); // Llama a search para ver si la clave ya existe
-
-    if (indice != -1) {
-        throw std::runtime_error("Error al encontrar key"); // Si la clave existe, lanza la excepción
-    }
-    
-    // Si la clave no existe, inserta el nuevo valor
-    TableEntry<V> entry(key, val);
-    table[temp].insert(0, entry);
-    n++; // Incrementa el número de elementos
-}
-int search(const std::string& key) {
-    int pos = h(key); // Calcula el índice hash
-    for (int i = 0; i < table[pos].size(); ++i) {
-        if (table[pos][i].key == key) {
-            return i; // Devuelve el índice del elemento encontrado
-        }
-    }
-    return -1; // Devuelve -1 si no se encuentra la clave
-}
-*/

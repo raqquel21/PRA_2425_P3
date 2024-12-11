@@ -13,5 +13,5 @@ bin/testBSTree: testBSTree.cpp BSTree.h BSNode.h
 	g++ -o bin/testBSTree testBSTree.cpp
 
 bin/testBSTreeDict: testBSTreeDict.cpp Dict.h BSTreeDict.h BSNode.h TableEntry.h
-	mkdir: -p bin
+	mkdir -p bin
 	g++ -o bin/testBSTreeDict testBSTreeDict.cpp
